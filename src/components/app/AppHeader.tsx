@@ -1,9 +1,11 @@
-import { Calendar, Menu } from "lucide-react";
+import { Calendar, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const AppHeader = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isCalendarView = location.pathname === "/app";
 
   return (
     <header className="h-16 border-b border-border bg-card flex items-center px-6">
@@ -16,11 +18,29 @@ const AppHeader = () => {
 
       <div className="ml-auto flex items-center gap-3">
         <Button 
+          variant={isCalendarView ? "default" : "ghost"}
+          size="sm"
+          onClick={() => navigate("/app")}
+          className="gap-2"
+        >
+          <Calendar className="w-4 h-4" />
+          Calendar
+        </Button>
+        <Button 
+          variant={!isCalendarView ? "default" : "ghost"}
+          size="sm"
+          onClick={() => navigate("/app/posts")}
+          className="gap-2"
+        >
+          <List className="w-4 h-4" />
+          Posts
+        </Button>
+        <Button 
           variant="ghost" 
           size="sm"
           onClick={() => navigate("/")}
         >
-          Back to Home
+          Home
         </Button>
       </div>
     </header>

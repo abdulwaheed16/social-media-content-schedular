@@ -7,7 +7,7 @@ export interface Post {
   platforms: string[];
   hashtags: string[];
   time: string;
-  status: "draft" | "scheduled" | "published";
+  status: "draft" | "scheduled" | "published" | "archived";
 }
 
 interface ContentContextType {
