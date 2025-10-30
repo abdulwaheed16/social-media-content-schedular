@@ -4,13 +4,22 @@ import CalendarGrid from "@/components/app/Calendar/CalendarGrid";
 import AppHeader from "@/components/app/AppHeader";
 import Sidebar from "@/components/app/Sidebar";
 import PostModal from "@/components/app/PostEditor/PostModal";
+import { Template } from "@/data/templates";
 
 const AppPage = () => {
   const [showPostModal, setShowPostModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
 
   const handleDateClick = (date: Date) => {
     setSelectedDate(date);
+    setSelectedTemplate(null);
+    setShowPostModal(true);
+  };
+
+  const handleTemplateSelect = (template: Template) => {
+    setSelectedTemplate(template);
+    setSelectedDate(new Date());
     setShowPostModal(true);
   };
 
@@ -19,7 +28,7 @@ const AppPage = () => {
       <AppHeader />
       
       <div className="flex-1 flex overflow-hidden">
-        <Sidebar />
+        <Sidebar onTemplateSelect={handleTemplateSelect} />
         
         <main className="flex-1 overflow-auto p-6">
           <div className="max-w-7xl mx-auto space-y-6">
@@ -32,7 +41,11 @@ const AppPage = () => {
       {showPostModal && selectedDate && (
         <PostModal
           date={selectedDate}
-          onClose={() => setShowPostModal(false)}
+          template={selectedTemplate}
+          onClose={() => {
+            setShowPostModal(false);
+            setSelectedTemplate(null);
+          }}
         />
       )}
     </div>

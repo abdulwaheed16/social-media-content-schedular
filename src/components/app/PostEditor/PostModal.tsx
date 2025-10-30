@@ -1,22 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useContent } from "@/context/ContentContext";
 import { useToast } from "@/hooks/use-toast";
 import PlatformSelector from "./PlatformSelector";
+import { Template } from "@/data/templates";
 
 interface PostModalProps {
   date: Date;
+  template?: Template | null;
   onClose: () => void;
 }
 
-const PostModal = ({ date, onClose }: PostModalProps) => {
+const PostModal = ({ date, template, onClose }: PostModalProps) => {
   const { addPost } = useContent();
   const { toast } = useToast();
   const [caption, setCaption] = useState("");
   const [platforms, setPlatforms] = useState<string[]>([]);
   const [time, setTime] = useState("09:00");
+
+  useEffect(() => {
+    if (template) {
+      setCaption(template.caption);
+      setPlatforms(template.platforms);
+      toast({
+        title: "Template loaded!",
+        description: `${template.name} template ready to customize`,
+      });
+    }
+  }, [template, toast]);
 
   const handleSave = () => {
     if (!caption.trim()) {
@@ -41,13 +54,13 @@ const PostModal = ({ date, onClose }: PostModalProps) => {
       date,
       caption,
       platforms,
-      hashtags: [],
+      hashtags: template?.hashtags || [],
       time,
       status: "draft",
     });
 
     toast({
-      title: "Post created!",
+      title: template ? "Post created from template!" : "Post created!",
       description: "Your post has been added to the calendar",
     });
 
@@ -59,7 +72,9 @@ const PostModal = ({ date, onClose }: PostModalProps) => {
       <div className="bg-card rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-auto border border-border animate-scale-in">
         <div className="sticky top-0 bg-card border-b border-border p-4 flex items-center justify-between">
           <div>
-            <h3 className="text-xl font-bold">Create Post</h3>
+            <h3 className="text-xl font-bold">
+              {template ? `Template: ${template.name}` : "Create Post"}
+            </h3>
             <p className="text-sm text-muted-foreground">
               {date.toLocaleDateString("en-US", { 
                 weekday: "long", 
@@ -88,6 +103,11 @@ const PostModal = ({ date, onClose }: PostModalProps) => {
           <div>
             <label className="text-sm font-semibold mb-2 block">
               Caption
+              {template && (
+                <span className="ml-2 text-xs text-muted-foreground">
+                  (Template includes {template.hashtags.length} hashtags)
+                </span>
+              )}
             </label>
             <Textarea
               value={caption}

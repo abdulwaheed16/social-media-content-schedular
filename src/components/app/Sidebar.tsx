@@ -1,8 +1,13 @@
-import { BarChart3, FolderOpen, Hash, Image } from "lucide-react";
+import { BarChart3, Hash, Image, FileText } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { useContent } from "@/context/ContentContext";
+import { contentTemplates, Template } from "@/data/templates";
 
-const Sidebar = () => {
+interface SidebarProps {
+  onTemplateSelect: (template: Template) => void;
+}
+
+const Sidebar = ({ onTemplateSelect }: SidebarProps) => {
   const { posts } = useContent();
 
   const stats = {
@@ -57,16 +62,18 @@ const Sidebar = () => {
 
         <div>
           <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-            <Image className="w-4 h-4" />
-            Templates
+            <FileText className="w-4 h-4" />
+            Content Templates
           </h3>
           <div className="space-y-2">
-            {["Product Launch", "Behind the Scenes", "Tip Tuesday", "Customer Spotlight"].map((template) => (
+            {contentTemplates.slice(0, 6).map((template) => (
               <button
-                key={template}
-                className="w-full text-left px-3 py-2 text-sm rounded-lg hover:bg-muted transition-colors"
+                key={template.id}
+                onClick={() => onTemplateSelect(template)}
+                className="w-full text-left px-3 py-2 text-sm rounded-lg hover:bg-muted transition-colors border border-transparent hover:border-primary/20"
               >
-                {template}
+                <div className="font-medium">{template.name}</div>
+                <div className="text-xs text-muted-foreground">{template.category}</div>
               </button>
             ))}
           </div>

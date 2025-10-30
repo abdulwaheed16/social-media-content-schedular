@@ -1,11 +1,10 @@
-import { Calendar, List } from "lucide-react";
+import { Calendar, List, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const AppHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const isCalendarView = location.pathname === "/app";
 
   return (
     <header className="h-16 border-b border-border bg-card flex items-center px-6">
@@ -18,7 +17,7 @@ const AppHeader = () => {
 
       <div className="ml-auto flex items-center gap-3">
         <Button 
-          variant={isCalendarView ? "default" : "ghost"}
+          variant={location.pathname === "/app" ? "default" : "ghost"}
           size="sm"
           onClick={() => navigate("/app")}
           className="gap-2"
@@ -27,13 +26,22 @@ const AppHeader = () => {
           Calendar
         </Button>
         <Button 
-          variant={!isCalendarView ? "default" : "ghost"}
+          variant={location.pathname === "/app/posts" ? "default" : "ghost"}
           size="sm"
           onClick={() => navigate("/app/posts")}
           className="gap-2"
         >
           <List className="w-4 h-4" />
           Posts
+        </Button>
+        <Button 
+          variant={location.pathname === "/app/templates" ? "default" : "ghost"}
+          size="sm"
+          onClick={() => navigate("/app/templates")}
+          className="gap-2"
+        >
+          <FileText className="w-4 h-4" />
+          Templates
         </Button>
         <Button 
           variant="ghost" 
